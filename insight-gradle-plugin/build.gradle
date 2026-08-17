@@ -1,6 +1,8 @@
 plugins {
     id 'java-gradle-plugin'
     id 'maven-publish'
+    id 'com.gradle.plugin-publish' version '2.1.1'
+    id 'com.gradleup.shadow' version '9.2.2'
 }
 
 dependencies {
@@ -18,12 +20,26 @@ java {
 }
 
 gradlePlugin {
+    website = 'https://github.com/spuermax/Android-Insight'
+    vcsUrl = 'https://github.com/spuermax/Android-Insight'
+
     plugins {
         androidInsight {
             id = 'io.github.squermax.androidinsight'
             implementationClass = 'io.github.androidinsight.gradle.AndroidInsightPlugin'
             displayName = 'Android Insight'
             description = 'Analyze Android APK build artifacts, diagnose packaging issues, and generate optimization reports.'
+            tags.set(['android', 'apk', 'analysis', 'optimization', 'performance'])
+            compatibility(it) {
+                features {
+                    configurationCache = false
+                }
+            }
         }
+
     }
+}
+
+tasks.named('shadowJar', com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar) {
+    archiveClassifier = ''
 }
