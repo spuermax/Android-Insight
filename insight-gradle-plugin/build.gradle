@@ -1,0 +1,29 @@
+plugins {
+    id 'java-gradle-plugin'
+    id 'maven-publish'
+}
+
+dependencies {
+    implementation project(':insight-analyzer-core')
+    implementation project(':insight-diagnosis')
+    implementation project(':insight-report')
+    implementation project(':insight-optimizer-redex')
+    compileOnly 'com.android.tools.build:gradle:8.13.2'
+}
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(17)
+    }
+}
+
+gradlePlugin {
+    plugins {
+        androidInsight {
+            id = 'io.github.androidinsight'
+            implementationClass = 'io.github.androidinsight.gradle.AndroidInsightPlugin'
+            displayName = 'Android Insight'
+            description = 'Analyze Android APK build artifacts, diagnose packaging issues, and generate optimization reports.'
+        }
+    }
+}

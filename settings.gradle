@@ -1,0 +1,23 @@
+pluginManagement {
+    repositories {
+        google()
+        mavenCentral()
+        gradlePluginPortal()
+    }
+}
+
+dependencyResolutionManagement {
+    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+    repositories {
+        google()
+        mavenCentral()
+    }
+}
+
+rootProject.name = 'android-insight'
+include ':insight-analyzer-core'
+include ':insight-diagnosis'
+include ':insight-report'
+include ':insight-gradle-plugin'
+
+include ':insight-optimizer-redex'

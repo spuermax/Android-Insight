@@ -1,0 +1,79 @@
+{
+  "variant": "debug",
+  "apk": "interdex_output.apk",
+  "apkBytes": 10841710,
+  "entryCount": 46,
+  "dexCount": 5,
+  "classDefs": 20362,
+  "methodIdEntries": 276198,
+  "diagnosis": {
+    "healthScore": 69,
+    "optimizationPotential": "HIGH",
+    "issues": [
+      {
+        "id": "DEX_DOMINATES_APK",
+        "severity": "HIGH",
+        "category": "DEX",
+        "title": "DEX dominates APK size",
+        "message": "A large share of the packaged APK is DEX bytecode, so code shrinking and DEX-level optimization may have meaningful impact.",
+        "evidence": ["DEX share: 87.48%", "DEX compressed size: 9.05 MB", "APK size: 10.34 MB"],
+        "suggestions": ["Verify R8/code shrinking settings for release builds.", "Measure removable debug metadata before considering StripDebugInfoPass.", "Evaluate ReDex only after functional regression testing."]
+      },
+      {
+        "id": "LARGE_DEPENDENCY_FILES",
+        "severity": "MEDIUM",
+        "category": "DEPENDENCY",
+        "title": "Large files are packaged from dependencies",
+        "message": "Large non-DEX files under Java-style package paths are present in the APK. DEX optimizers do not remove these files, so dependency trimming may provide better results.",
+        "evidence": ["org/bouncycastle/pqc/crypto/picnic/lowmcL5.bin.properties: 731.70 KB", "org/bouncycastle/pqc/crypto/picnic/lowmcL3.bin.properties: 340.02 KB", "org/bouncycastle/pqc/crypto/picnic/lowmcL1.bin.properties: 114.63 KB", "Visible large dependency files total: 1.16 MB"],
+        "suggestions": ["Verify whether the dependency feature that owns these files is actually used.", "Prefer a smaller artifact/module when the library provides one.", "Do not expect ReDex to reduce these non-DEX files."]
+      },
+      {
+        "id": "MULTIDEX_COUNT_HIGH",
+        "severity": "MEDIUM",
+        "category": "DEX_LAYOUT",
+        "title": "DEX count is relatively high",
+        "message": "Multiple DEX files are normal for large apps, but a high count is a signal to inspect code size and DEX layout rather than treating the count alone as a defect.",
+        "evidence": ["DEX count: 5"],
+        "suggestions": ["Inspect which dependencies contribute most methods/classes.", "Review DEX layout together with startup and cross-DEX reference metrics.", "Consider InterDex only when measurements show layout optimization is useful."]
+      }
+    ]
+  },
+  "categories": {
+    "dex": {"compressedBytes": 9484660, "uncompressedBytes": 28853748},
+    "native": {"compressedBytes": 0, "uncompressedBytes": 0},
+    "resources": {"compressedBytes": 74423, "uncompressedBytes": 81364},
+    "assets": {"compressedBytes": 0, "uncompressedBytes": 0},
+    "meta_inf": {"compressedBytes": 4840, "uncompressedBytes": 10312},
+    "other": {"compressedBytes": 1264631, "uncompressedBytes": 1418045}
+  },
+  "dexFiles": [
+    {"name": "classes.dex", "compressedBytes": 2853646, "uncompressedBytes": 7626196, "stringIds": 35344, "typeIds": 6715, "protoIds": 13687, "fieldIds": 14305, "methodIdEntries": 65527, "classDefs": 5751},
+    {"name": "classes2.dex", "compressedBytes": 1845801, "uncompressedBytes": 6088512, "stringIds": 9966, "typeIds": 4682, "protoIds": 8691, "fieldIds": 8949, "methodIdEntries": 65522, "classDefs": 4113},
+    {"name": "classes3.dex", "compressedBytes": 2734602, "uncompressedBytes": 8206724, "stringIds": 25767, "typeIds": 7473, "protoIds": 9656, "fieldIds": 17213, "methodIdEntries": 65520, "classDefs": 6071},
+    {"name": "classes4.dex", "compressedBytes": 1795143, "uncompressedBytes": 5975180, "stringIds": 8815, "typeIds": 4966, "protoIds": 6215, "fieldIds": 10790, "methodIdEntries": 65527, "classDefs": 3876},
+    {"name": "classes5.dex", "compressedBytes": 255468, "uncompressedBytes": 957136, "stringIds": 2521, "typeIds": 889, "protoIds": 1963, "fieldIds": 1239, "methodIdEntries": 14102, "classDefs": 551}
+  ],
+  "largestFiles": [
+    {"path": "classes.dex", "category": "DEX", "compressedBytes": 2853646, "uncompressedBytes": 7626196},
+    {"path": "classes3.dex", "category": "DEX", "compressedBytes": 2734602, "uncompressedBytes": 8206724},
+    {"path": "classes2.dex", "category": "DEX", "compressedBytes": 1845801, "uncompressedBytes": 6088512},
+    {"path": "classes4.dex", "category": "DEX", "compressedBytes": 1795143, "uncompressedBytes": 5975180},
+    {"path": "org/bouncycastle/pqc/crypto/picnic/lowmcL5.bin.properties", "category": "OTHER", "compressedBytes": 749257, "uncompressedBytes": 752652},
+    {"path": "org/bouncycastle/pqc/crypto/picnic/lowmcL3.bin.properties", "category": "OTHER", "compressedBytes": 348178, "uncompressedBytes": 350101},
+    {"path": "classes5.dex", "category": "DEX", "compressedBytes": 255468, "uncompressedBytes": 957136},
+    {"path": "org/bouncycastle/pqc/crypto/picnic/lowmcL1.bin.properties", "category": "OTHER", "compressedBytes": 117380, "uncompressedBytes": 118306},
+    {"path": "res/mipmap-xxxhdpi-v4/ic_launcher_round.png", "category": "RESOURCES", "compressedBytes": 15523, "uncompressedBytes": 15523},
+    {"path": "google/protobuf/descriptor.proto", "category": "OTHER", "compressedBytes": 14707, "uncompressedBytes": 49985},
+    {"path": "res/mipmap-xxhdpi-v4/ic_launcher_round.png", "category": "RESOURCES", "compressedBytes": 10676, "uncompressedBytes": 10676},
+    {"path": "res/mipmap-xxxhdpi-v4/ic_launcher.png", "category": "RESOURCES", "compressedBytes": 9250, "uncompressedBytes": 9250},
+    {"path": "res/mipmap-xhdpi-v4/ic_launcher_round.png", "category": "RESOURCES", "compressedBytes": 7098, "uncompressedBytes": 7098},
+    {"path": "org/bouncycastle/x509/CertPathReviewerMessages_de.properties", "category": "OTHER", "compressedBytes": 6732, "uncompressedBytes": 49608},
+    {"path": "res/mipmap-xxhdpi-v4/ic_launcher.png", "category": "RESOURCES", "compressedBytes": 6464, "uncompressedBytes": 6464},
+    {"path": "org/bouncycastle/x509/CertPathReviewerMessages.properties", "category": "OTHER", "compressedBytes": 6038, "uncompressedBytes": 42868},
+    {"path": "res/mipmap-hdpi-v4/ic_launcher_round.png", "category": "RESOURCES", "compressedBytes": 5024, "uncompressedBytes": 5024},
+    {"path": "res/mipmap-xhdpi-v4/ic_launcher.png", "category": "RESOURCES", "compressedBytes": 4569, "uncompressedBytes": 4569},
+    {"path": "resources.arsc", "category": "RESOURCES", "compressedBytes": 3472, "uncompressedBytes": 3472},
+    {"path": "google/protobuf/field_mask.proto", "category": "OTHER", "compressedBytes": 3123, "uncompressedBytes": 8185}
+  ]
+}

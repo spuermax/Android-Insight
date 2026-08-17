@@ -1,0 +1,22 @@
+# Local machine configuration
+local.properties
+
+# Gradle
+.gradle/
+**/build/
+
+# IntelliJ IDEA / Android Studio
+.idea/
+*.iml
+
+# macOS
+.DS_Store
+**/.DS_Store
+
+# Signing material
+*.jks
+*.keystore
+
+# ReDex local output and logs
+*.log
+
