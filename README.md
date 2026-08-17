@@ -1,5 +1,7 @@
 # Android Insight
 
+Android Insight is a Gradle plugin for analyzing Android APK build artifacts, diagnosing packaging issues, comparing APKs, and optionally running ReDex optimizations.
+
 Android Insight 是一个面向 Android 构建产物的 Gradle 插件，目前提供 APK 分析、自动诊断、APK 对比，以及可选的 ReDex 自动优化。
 
 ## V0.4 能力
@@ -46,7 +48,7 @@ V0.4 在 V0.1~V0.3 的 Analyzer / Compare / Diagnosis 基础上新增 ReDex Opti
 App 模块：
 
     plugins {
-        id 'io.github.androidinsight'
+        id 'io.github.spuermax.androidinsight'
     }
 
 基础配置：
@@ -56,6 +58,12 @@ App 模块：
         topFiles = 20
         jsonReport = true
         htmlReport = true
+    }
+
+线上使用：
+
+    plugins {
+        id 'io.github.spuermax.androidinsight' version '0.4.0' 
     }
 
 ## ReDex Optimizer 配置
