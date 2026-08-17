@@ -25,7 +25,7 @@ gradlePlugin {
 
     plugins {
         androidInsight {
-            id = 'io.github.squermax.androidinsight'
+            id = 'io.github.spuermax.androidinsight'
             implementationClass = 'io.github.androidinsight.gradle.AndroidInsightPlugin'
             displayName = 'Android Insight'
             description = 'Analyze Android APK build artifacts, diagnose packaging issues, and generate optimization reports.'

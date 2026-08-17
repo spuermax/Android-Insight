@@ -1,4 +1,4 @@
 allprojects {
-    group = 'io.github.squermax'
+    group = 'io.github.spuermax'
     version = '0.4.0'
 }
