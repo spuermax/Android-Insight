@@ -9,7 +9,6 @@ dependencies {
     implementation project(':insight-analyzer-core')
     implementation project(':insight-diagnosis')
     implementation project(':insight-report')
-    implementation project(':insight-optimizer-redex')
     compileOnly 'com.android.tools.build:gradle:8.13.2'
 }
 
@@ -28,8 +27,8 @@ gradlePlugin {
             id = 'io.github.spuermax.androidinsight'
             implementationClass = 'io.github.androidinsight.gradle.AndroidInsightPlugin'
             displayName = 'Android Insight'
-            description = 'Analyze Android APK build artifacts, diagnose packaging issues, and generate optimization reports.'
-            tags.set(['android', 'apk', 'analysis', 'optimization', 'performance'])
+            description = 'Analyze Android APK build artifacts, diagnose packaging issues, compare APKs, and generate optimization suggestions.'
+            tags.set(['android', 'apk', 'analysis', 'diagnostics', 'performance'])
             compatibility(it) {
                 features {
                     configurationCache = false
@@ -42,4 +41,11 @@ gradlePlugin {
 
 tasks.named('shadowJar', com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar) {
     archiveClassifier = ''
+}
+
+tasks.withType(Javadoc).configureEach {
+    options.jFlags('-Dfile.encoding=UTF-8')
+    options.encoding = 'UTF-8'
+    options.charSet = 'UTF-8'
+    options.docEncoding = 'UTF-8'
 }

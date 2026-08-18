@@ -1,9 +1,0 @@
-{
-  "variant": "debug",
-  "baselineLabel": "original",
-  "baseline": {"name": "ReDexSample-debug.apk", "apkBytes": 12557255, "dexCount": 7, "classDefs": 20357, "methodIds": 273702, "categories": {"dex": 11202102, "native": 0, "resources": 74403, "assets": 0, "meta_inf": 5197, "other": 1264631}},
-  "candidates": [
-    {"label": "strip", "apk": {"name": "strip_output.apk", "apkBytes": 10817250, "dexCount": 7, "classDefs": 20357, "methodIds": 273702, "deltaBytes": -1740005, "changePercent": -13.856571360540181, "categories": {"dex": 9460540, "native": 0, "resources": 74423, "assets": 0, "meta_inf": 4995, "other": 1264631}}},
-    {"label": "interdex", "apk": {"name": "interdex_output.apk", "apkBytes": 10841710, "dexCount": 5, "classDefs": 20362, "methodIds": 276198, "deltaBytes": -1715545, "changePercent": -13.661783566551767, "categories": {"dex": 9484660, "native": 0, "resources": 74423, "assets": 0, "meta_inf": 4840, "other": 1264631}}}
-  ]
-}

@@ -24,6 +24,6 @@ public final class DexCountRule implements DiagnosisRule {
                 List.of(
                         "分析哪些依赖贡献了最多的类和方法引用。",
                         "结合启动性能和跨 DEX 引用情况一起判断布局是否需要调整。",
-                        "只有在前后测量能够证明收益时，再考虑 InterDex。")));
+                        "使用 APK 前后对比验证依赖裁剪或 R8 配置调整的收益。")));
     }
 }

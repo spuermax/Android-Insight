@@ -17,6 +17,5 @@ local.properties
 *.jks
 *.keystore
 
-# ReDex local output and logs
+# Local logs
 *.log
-

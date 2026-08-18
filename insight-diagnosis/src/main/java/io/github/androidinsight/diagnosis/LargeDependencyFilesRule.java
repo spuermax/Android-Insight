@@ -33,12 +33,12 @@ public final class LargeDependencyFilesRule implements DiagnosisRule {
                 total >= 512L * 1024L ? Severity.MEDIUM : Severity.LOW,
                 IssueCategory.DEPENDENCY,
                 "依赖中包含较大的非 DEX 文件",
-                "APK 中存在位于 Java 风格包路径下的大型非 DEX 文件。ReDex 不会删除这类文件，因此依赖裁剪可能比 DEX 优化更有效。",
+                "APK 中存在位于 Java 风格包路径下的大型非 DEX 文件，依赖裁剪或替换精简 artifact 可能更有效。",
                 evidence,
                 List.of(
                         "确认这些文件所属的依赖功能是否真的被业务使用。",
                         "如果依赖提供更小的模块化 artifact，优先使用更精简的 artifact。",
-                        "不要期待 ReDex 能缩减这些非 DEX 文件。")));
+                        "对可选数据文件考虑按需下发或移出基础 APK。")));
     }
 
     private static boolean looksLikeDependencyPath(String path) {

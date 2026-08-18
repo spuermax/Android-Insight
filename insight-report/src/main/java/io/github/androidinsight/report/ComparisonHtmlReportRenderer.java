@@ -18,7 +18,7 @@ public final class ComparisonHtmlReportRenderer {
         html.append("</table>");
         html.append("<h2>分类体积变化</h2>");
         for (ComparedApk item : comparison.candidates()) {
-            html.append("<h3>").append(esc(item.label())).append("</h3><table><tr><th>分类</th><th>优化前</th><th>优化后</th><th>变化量</th><th>变化率</th></tr>");
+            html.append("<h3>").append(esc(item.label())).append("</h3><table><tr><th>分类</th><th>基线 APK</th><th>候选 APK</th><th>变化量</th><th>变化率</th></tr>");
             for (ApkCategory category : ApkCategory.values()) {
                 long before = baseline.category(category).compressedBytes();
                 long after = item.analysis().category(category).compressedBytes();

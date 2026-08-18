@@ -19,5 +19,3 @@ include ':insight-analyzer-core'
 include ':insight-diagnosis'
 include ':insight-report'
 include ':insight-gradle-plugin'
-
-include ':insight-optimizer-redex'

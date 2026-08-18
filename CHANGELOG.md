@@ -2,17 +2,12 @@
 
 ## V0.4
 
-- Added `insight-optimizer-redex` module.
-- Added `optimize<Variant>Apk` tasks.
-- Added ReDex `strip` and `strip-interdex` built-in strategies.
-- Added `redexHome` convenience configuration plus explicit `redexScript` / `redexBinary` overrides.
-- Added ReDex runner with safe command logging and password redaction.
-- Added optional `PYTHONPATH` and TRACE environment configuration.
-- Added SHA-256 check to confirm the original AGP APK is not overwritten.
-- Added optional APK signing through ReDex and post-run `zipalign` / `apksigner` verification.
-- Added optimization Console / JSON / HTML reports with Chinese user-facing text where appropriate.
-- Kept technical identifiers such as Pass names, DEX and Method ID terms in English.
-- Optimization output is written to a separate Android Insight directory and never replaces the normal AGP artifact in V0.4.
+- Focused the plugin on APK analysis, diagnosis, comparison, and optimization suggestions.
+- Kept Android Insight read-only: it analyzes build artifacts but never modifies APK files.
+- Kept per-variant `analyze<Variant>Apk` and `compare<Variant>Apk` tasks.
+- Kept Console, JSON, and HTML reports for analysis and comparison.
+- Added Gradle Plugin Portal metadata and a shaded plugin artifact for internal modules.
+- Kept technical identifiers such as DEX and Method ID terms in English.
 
 ## V0.3
 
@@ -34,7 +29,7 @@
 - Added console, JSON and HTML comparison reports.
 - Added category-level compressed-size deltas.
 - Moved Android Insight tasks into their own Gradle task group.
-- Added a real comparison sample using Chapter22 original / StripDebugInfo / InterDex APKs.
+- Added a real APK comparison sample.
 
 ## V0.1
 

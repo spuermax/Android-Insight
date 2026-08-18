@@ -39,7 +39,7 @@ public final class DexDistributionRule implements DiagnosisRule {
                 evidence,
                 List.of(
                         "先确认为什么当前 variant 会产生极小 DEX。",
-                        "可以使用 InterDex 等布局策略做前后对比实验。",
+                        "对调整前后的 APK 使用 compare task 做定量对比。",
                         "任何 DEX 重排后都要验证启动行为和运行时正确性。")));
     }
 }

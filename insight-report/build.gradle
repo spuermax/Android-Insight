@@ -3,7 +3,6 @@ plugins {
 }
 
 dependencies {
-    implementation project(':insight-optimizer-redex')
     api project(':insight-analyzer-core')
     api project(':insight-diagnosis')
 }

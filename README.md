@@ -1,197 +1,160 @@
 # Android Insight
 
-Android Insight is a Gradle plugin for analyzing Android APK build artifacts, diagnosing packaging issues, comparing APKs, and optionally running ReDex optimizations.
+**Android APK Analysis & Diagnosis Gradle Plugin**
 
-Android Insight 是一个面向 Android 构建产物的 Gradle 插件，目前提供 APK 分析、自动诊断、APK 对比，以及可选的 ReDex 自动优化。
+Android Insight is a Gradle plugin for analyzing Android APK build artifacts, diagnosing packaging issues, comparing APKs, and generating optimization suggestions.
+
+Android Insight 是一个面向 Android APK 构建产物的 Gradle 插件，提供 APK 分析、自动诊断、APK 对比以及优化建议。
+
+Android Insight 只读取和分析 APK，不会修改、替换或重新签名 APK。
 
 ## V0.4 能力
 
-V0.4 在 V0.1~V0.3 的 Analyzer / Compare / Diagnosis 基础上新增 ReDex Optimizer：
-
-- `analyze<Variant>Apk`：分析 APK，并输出中文诊断建议。
-- `compare<Variant>Apk`：把当前 APK 与配置的候选 APK 做前后对比。
-- `optimize<Variant>Apk`：调用外部 ReDex，生成独立优化 APK，再自动分析和对比。
-- 原始 AGP APK 不会被替换；优化前后会通过 SHA-256 再确认原始 APK 是否保持不变。
-- 支持内置 `strip` 和 `strip-interdex` 两种策略。
-- 支持 `redexHome`，也支持分别配置 `redexScript` / `redexBinary`。
-- 可选调用 ReDex 完成签名；优化完成后自动尝试 `zipalign -c` 与 `apksigner verify`。
-- Console / HTML 报告以中文为主；Pass、DEX、Method ID、文件路径等技术标识保留英文。
+- APK 文件结构与体积分析
+- DEX 数量、体积、Class Defs 和 Method ID Entries 分析
+- Resources、Assets 和 Native Library 分析
+- 大文件排名与分类统计
+- 规则驱动的 Diagnosis Engine
+- Health Score 和 Optimization Potential
+- APK 基线/候选产物对比
+- Console、JSON 和 HTML 报告
+- 针对 R8、依赖、DEX 布局、资源、Assets 和 Native Library 的优化建议
 
 ## 模块
 
-- `insight-analyzer-core`：APK / DEX 分析。
-- `insight-diagnosis`：规则驱动的诊断引擎。
-- `insight-report`：Console / JSON / HTML 报告。
-- `insight-optimizer-redex`：ReDex 命令封装、内置 Pass 配置、Build Tools 验证。
+- `insight-analyzer-core`：APK / DEX 分析模型与解析器。
+- `insight-diagnosis`：规则驱动的诊断引擎与优化建议。
+- `insight-report`：分析和对比的 Console / JSON / HTML 报告。
 - `insight-gradle-plugin`：Android Gradle Plugin 接入和 Variant Task 编排。
 
 ## 要求
 
 - JDK 17
-- 当前开发样例使用 Android Gradle Plugin 8.13.2 / Gradle 8.13
-- 使用 Optimizer 时，需要本机已有可工作的 ReDex
-- 如果通过 `redex.py` 运行，需要可用 Python 环境
+- Gradle 8.13
+- Android Gradle Plugin 8.13.2
 
-## 本地 composite build 接入
+## 使用
+
+### Gradle Plugin Portal
+
+在 Android App 模块中应用插件：
+
+```groovy
+plugins {
+    id 'io.github.spuermax.androidinsight' version '0.4.0'
+}
+```
+
+### 本地 composite build
 
 宿主工程 `settings.gradle`：
 
-    pluginManagement {
-        includeBuild '../AndroidInsight'
-        repositories {
-            google()
-            mavenCentral()
-            gradlePluginPortal()
-        }
+```groovy
+pluginManagement {
+    includeBuild '../AndroidInsight'
+    repositories {
+        google()
+        mavenCentral()
+        gradlePluginPortal()
     }
+}
+```
 
 App 模块：
 
-    plugins {
-        id 'io.github.spuermax.androidinsight'
-    }
+```groovy
+plugins {
+    id 'io.github.spuermax.androidinsight'
+}
+```
 
-基础配置：
+## 配置
 
-    androidInsight {
-        enabled = true
-        topFiles = 20
-        jsonReport = true
-        htmlReport = true
-    }
+```groovy
+androidInsight {
+    enabled = true
+    topFiles = 20
+    jsonReport = true
+    htmlReport = true
 
-线上使用：
+    comparisonApks = [
+        releaseCandidate: '/path/to/candidate.apk'
+    ]
+}
+```
 
-    plugins {
-        id 'io.github.spuermax.androidinsight' version '0.4.0' 
-    }
-
-## ReDex Optimizer 配置
-
-推荐配置 `redexHome`，Android Insight 会在其中寻找 `redex.py` 和 `redex-all`：
-
-    androidInsight {
-        redex {
-            enabled = true
-            strategy = "strip-interdex"   // strip / strip-interdex
-            redexHome = "/path/to/redex"
-            pythonExecutable = "/path/to/python3.11"
-
-            // 可选：Python 临时依赖目录，例如 packaging 所在目录
-            pythonPath = "/path/to/extra/python/packages"
-
-            // 可选：不设置时使用 Android Insight 内置 config
-            // configFile = "/path/to/custom-redex.config"
-
-            // 可选：传给 ReDex 的 ProGuard rules
-            // proguardConfig = file("proguard-rules.pro").absolutePath
-
-            // 默认 false。线上正式 keystore 不建议直接写入工程文件。
-            sign = false
-        }
-    }
-
-也可以不用 `redexHome`，分别配置：
-
-    redexScript = "/path/to/redex.py"
-    redexBinary = "/path/to/redex-all"
-
-如果 Android Studio 的 Gradle 进程找不到 `python3.11`，请将 `pythonExecutable` 改为 `which python3.11` 返回的绝对路径。
+- `enabled`：是否执行 Android Insight Task，默认 `true`。
+- `topFiles`：报告中展示的最大文件数量，默认 `20`。
+- `jsonReport`：是否生成 JSON 报告，默认 `true`。
+- `htmlReport`：是否生成 HTML 报告，默认 `true`。
+- `comparisonApks`：候选 APK 标签与文件路径的映射。
 
 ## Task
 
-分析：
+分析 Debug APK：
 
-    ./gradlew :app:analyzeDebugApk
+```bash
+./gradlew :app:analyzeDebugApk
+```
 
-比较：
+对比 Debug APK：
 
-    ./gradlew :app:compareDebugApk
+```bash
+./gradlew :app:compareDebugApk
+```
 
-自动优化：
+Release Variant 对应生成：
 
-    ./gradlew :app:optimizeDebugApk
+```text
+analyzeReleaseApk
+compareReleaseApk
+```
 
-Release variant 也会生成对应的：
+## 报告输出
 
-    analyzeReleaseApk
-    compareReleaseApk
-    optimizeReleaseApk
+分析报告：
 
-## V0.4 优化产物
+```text
+app/build/reports/android-insight/<variant>/
+  <apk-base-name>.json
+  <apk-base-name>.html
+```
 
-以 debug + `strip-interdex` 为例：
+对比报告：
 
-    app/build/outputs/android-insight/debug/
-      app-debug-redex-strip-interdex.apk
+```text
+app/build/reports/android-insight/<variant>/compare/
+  comparison.json
+  comparison.html
+```
 
-报告：
-
-    app/build/reports/android-insight/debug/optimize/
-      optimization.html
-      optimization.json
-      redex.log
-      redex-config/
-
-报告会展示：
-
-- 优化前 / 优化后 APK 大小
-- 体积变化百分比
-- DEX 数量变化
-- Class Defs / DEX Method ID Entries 变化
-- Health Score 变化
-- 原始 APK 是否保持不变
-- ZIP 对齐验证
-- APK 签名验证
-- 优化 APK 路径
-- ReDex 日志路径
-
-## 内置策略
-
-### `strip`
-
-只执行：
-
-- `StripDebugInfoPass`
-
-### `strip-interdex`
-
-依次执行：
-
-- `StripDebugInfoPass`
-- `InterDexPass`
-
-其中 InterDex 默认开启 `minimize_cross_dex_refs`。V0.4 暂时不开放大量激进 Pass，先保证优化链可解释、可比较、可回归。
-
-## 重要安全边界
-
-V0.4 不会把优化 APK 自动替换为 AGP 正常构建产物，也不会自动接入正式 release 发布流程。
-
-正确流程仍然是：
-
-    原始 APK
-      -> Android Insight Analyze / Diagnose
-      -> ReDex Optimize
-      -> 自动 Compare / Validate
-      -> 安装、启动、核心功能回归
-      -> 再决定是否进入正式发布流程
-
-正式签名建议后续使用 CI Secret / KMS / 企业签名服务，而不是把 keystore 密码提交到仓库。
+Console 报告会直接输出在 Gradle 日志中。
 
 ## Diagnosis 默认阈值
 
-当前规则仍保持透明、简单：
+- DEX 占比 `>= 60%`：MEDIUM；`>= 80%`：HIGH
+- DEX 数量 `>= 5`：MEDIUM；`>= 10`：HIGH
+- Tiny DEX：`<= 64 KiB` 且 `<= 最大 DEX 的 5%`
+- 大型依赖文件：Java 风格包路径且 `>= 100 KiB`
+- Native 占比 `>= 40%`：MEDIUM；`>= 60%`：HIGH
+- Resources 占比 `>= 30%`：MEDIUM；`>= 50%`：HIGH
+- Assets 占比 `>= 20%`：MEDIUM；`>= 40%`：HIGH
 
-- DEX 占比 >= 60%：MEDIUM；>= 80%：HIGH
-- DEX 数量 >= 5：MEDIUM；>= 10：HIGH
-- Tiny DEX：<= 64 KiB 且 <= 最大 DEX 的 5%
-- 大型依赖文件：Java 风格包路径且 >= 100 KiB
-- Native 占比 >= 40%：MEDIUM；>= 60%：HIGH
-- Resources 占比 >= 30%：MEDIUM；>= 50%：HIGH
-- Assets 占比 >= 20%：MEDIUM；>= 40%：HIGH
-
-这些只是诊断信号，不是通用性能真理。
+这些阈值是用于定位问题的诊断信号，不是适用于所有项目的性能真理。
 
 ## Method 指标说明
 
 `DEX Method ID Entries` 是所有 DEX 的 `method_ids_size` 引用表项之和，不是 APK 的唯一方法数量。DEX 重新分包后，即使业务语义不变，该值也可能变化。
+
+## 建议工作流
+
+```text
+APK Build
+  -> Analyze
+  -> Diagnose
+  -> Report
+  -> Developer Optimize
+  -> Compare
+```
+
+Android Insight V0.4 负责分析、诊断和对比，实际优化由开发者在宿主工程中完成。

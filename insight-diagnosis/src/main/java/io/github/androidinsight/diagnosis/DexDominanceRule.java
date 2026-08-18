@@ -29,7 +29,7 @@ public final class DexDominanceRule implements DiagnosisRule {
                         "APK 体积: " + DiagnosisMath.bytes(analysis.apkBytes())),
                 List.of(
                         "Release 构建优先确认 R8 / code shrinking 是否正确开启。",
-                        "在使用 StripDebugInfoPass 前先测量可移除的调试元数据。",
-                        "ReDex 会修改最终字节码，优化后必须进行安装、启动和核心功能回归测试。")));
+                        "检查可移除的调试元数据和未使用代码。",
+                        "通过依赖分析定位贡献类和方法数量较多的库。")));
     }
 }

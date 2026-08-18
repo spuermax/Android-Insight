@@ -29,7 +29,7 @@ public final class DiagnosisEngine {
                         thresholds.nativeHighShare(),
                         List.of(
                                 "检查 ABI 重复打包，并在产品允许时移除不支持的 ABI。",
-                                "单独分析大型 .so 与 native symbols；这部分不属于 ReDex 的 DEX 优化范围。")),
+                                "单独分析大型 .so 与 native symbols，并检查是否包含不需要的 ABI。")),
                 new CategoryShareRule(
                         ApkCategory.RESOURCES,
                         IssueCategory.RESOURCES,
